@@ -1,0 +1,29 @@
+<project name="guidplugin" default="build" basedir=".">
+
+    <property name="idea.home" value="/Applications/IntelliJ IDEA 14 CE.app/Contents"/>
+
+    <target name="init">
+        <available file="${idea.home}/lib/openapi.jar" property="idea.home.found"/>
+        <fail unless="idea.home.found" message="set idea.home properly"/>
+    </target>
+
+    <target name="clean" depends="init">
+        <delete dir="build"/>
+    </target>
+
+    <target name="build" depends="clean">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" destdir="build/classes" debug="true" target="6" source="6">
+            <classpath>
+                <pathelement location="${idea.home}/lib/openapi.jar"/>
+                <pathelement location="${idea.home}/lib/util.jar"/>
+            </classpath>
+        </javac>
+        <copy todir="build/classes">
+            <fileset dir=".">
+                <include name="META-INF/**"/>
+            </fileset>
+        </copy>
+        <jar destfile="build/guidplugin.jar" basedir="build/classes"/>
+    </target>
+</project>
